@@ -136,4 +136,7 @@ docker exec -it takt-php-1 php bin/console doctrine:migrations:migrate
 
 ## License
 
-MIT
+All rights reserved. This is the source code of an engineering thesis project,
+published so that it can be read and reviewed. It is not open source and may not
+be reused without written permission. See [LICENSE](LICENSE) for the full notice,
+including the third-party components that keep their original MIT license.
