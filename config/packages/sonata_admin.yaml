@@ -1,0 +1,12 @@
+sonata_admin:
+    title: 'WorkManager'
+    options:
+        skin: skin-blue
+    dashboard:
+        blocks:
+            - { type: sonata.admin.block.admin_list, position: left }
+
+sonata_block:
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts: [admin]

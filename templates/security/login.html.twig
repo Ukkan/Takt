@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in – Takt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
+<body>
+<script>
+(function(){
+    var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="sidebar-logo-mark">T</div>
+            <span class="sidebar-logo-text">Takt</span>
+        </div>
+
+        <div class="auth-title">Sign in to your account</div>
+
+        {% if error %}
+            <div class="flash flash-danger" style="margin-bottom:16px;">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{{ path('app_login') }}">
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="_username" class="form-control"
+                       value="{{ last_username }}" autocomplete="email" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="_password" class="form-control"
+                       autocomplete="current-password" required>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit" class="btn btn-primary w-100" style="height:38px;margin-top:8px;">Sign in</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{# Params: summary (array), title (string) #}
+<div style="margin-bottom:20px;">
+    <div class="section-header" style="margin-bottom:12px;">
+        <span class="section-title">{{ title }}</span>
+        {% if summary.approvedVacationDays > 0 %}
+            <span class="badge-accent badge">{{ summary.approvedVacationDays }} vacation day{{ summary.approvedVacationDays != 1 ? 's' }}</span>
+        {% endif %}
+    </div>
+    <div class="stat-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-card">
+            <div class="stat-label">Worked</div>
+            <div class="stat-value">{{ (summary.workedMinutes // 60) }}h {{ (summary.workedMinutes % 60) }}m</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Expected</div>
+            <div class="stat-value">{{ (summary.expectedMinutes // 60) }}h {{ (summary.expectedMinutes % 60) }}m</div>
+        </div>
+        <div class="stat-card">
+            {% set net = summary.netMinutes %}
+            <div class="stat-label">{{ net >= 0 ? 'Overtime' : 'Deficit' }}</div>
+            <div class="stat-value {{ net >= 0 ? 'success' : 'danger' }}">
+                {{ net >= 0 ? '+' : '' }}{{ (net // 60) }}h {{ (net % 60)|abs }}m
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Team Dashboard – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}Team Dashboard{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Status</th>
+                    <th>Clocked in since</th>
+                    <th>This month</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                {% set active = activeEntries[employee.id] ?? null %}
+                {% set status = monthlyStatus[employee.id] ?? null %}
+                <tr>
+                    <td style="font-weight:500;">{{ employee.user ? employee.user.fullName ?? employee.user.email : '—' }}</td>
+                    <td class="td-muted">{{ employee.position ?? '—' }}</td>
+                    <td>
+                        {% if active %}
+                            <span class="badge badge-active">Clocked in</span>
+                        {% else %}
+                            <span class="badge badge-neutral">Out</span>
+                        {% endif %}
+                    </td>
+                    <td class="td-muted">{{ active ? active.startTime|date('H:i, d M') : '—' }}</td>
+                    <td>
+                        {% if status is null %}
+                            <span class="td-muted">N/A</span>
+                        {% elseif status.netMinutes > 60 %}
+                            <span style="color:var(--success);font-weight:500;">+{{ (status.netMinutes // 60) }}h {{ (status.netMinutes % 60) }}m</span>
+                        {% elseif status.netMinutes < -60 %}
+                            <span style="color:var(--danger);font-weight:500;">{{ (status.netMinutes // 60) }}h {{ (status.netMinutes % 60)|abs }}m</span>
+                        {% else %}
+                            <span class="td-muted">On track</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_manager_employee_time', {id: employee.id}) }}" class="btn btn-secondary btn-sm">View time</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:24px 12px;">No employees found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

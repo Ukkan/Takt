@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendar – Takt{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
+{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}{{ companyWide ? 'Team Calendar' : 'My Calendar' }}{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div class="card cal-card">
+    <div class="cal-head">
+        <div class="cal-nav">
+            <a class="btn btn-ghost btn-sm" href="{{ path('app_calendar', prev) }}" aria-label="Previous month">‹</a>
+            <div class="cal-title">
+                <span class="cal-month">{{ calendar.month }}</span>
+                <span class="cal-year">{{ calendar.year }}</span>
+            </div>
+            <a class="btn btn-ghost btn-sm" href="{{ path('app_calendar', next) }}" aria-label="Next month">›</a>
+        </div>
+        <div class="cal-legend">
+            <span class="cal-legitem"><i class="cal-swatch cal-swatch--approved"></i> Approved</span>
+            <span class="cal-legitem"><i class="cal-swatch cal-swatch--pending"></i> Pending</span>
+        </div>
+    </div>
+
+    <div class="cal-dow">
+        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+    </div>
+
+    {% set lead = calendar.firstDow %}
+    {% set pad = (7 - (lead + calendar.daysInMonth) % 7) % 7 %}
+    <div class="cal-grid" id="calGrid">
+        {% if lead > 0 %}
+            {% for i in 1..lead %}
+                <span class="cal-cell cal-cell--empty"></span>
+            {% endfor %}
+        {% endif %}
+        {% for d in 1..calendar.daysInMonth %}
+            {% set e = calendar.events[d] ?? null %}
+            <button type="button"
+                    class="cal-cell{{ e ? ' cal-cell--' ~ e.kind }}{{ d == calendar.today ? ' cal-cell--today' }}"
+                    data-day="{{ d }}"
+                    {% if e %}data-kind="{{ e.kind }}" data-label="{{ e.label }}" data-who="{{ e.who }}"{% endif %}
+                    aria-label="{{ calendar.month }} {{ d }}{{ e ? ', ' ~ e.label ~ ', ' ~ e.who }}">
+                {{ d }}
+                {% if e and e.count > 1 %}<span class="cal-count">{{ e.count }}</span>{% endif %}
+            </button>
+        {% endfor %}
+        {% if pad > 0 %}
+            {% for i in 1..pad %}
+                <span class="cal-cell cal-cell--empty"></span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="cal-detail" aria-live="polite" id="calDetail"
+         data-placeholder-label="Hover a day to see who's out"
+         data-placeholder-sub="{{ calendar.eventCount }} vacation{{ calendar.eventCount != 1 ? 's' }} this month{{ companyWide ? ' · ' ~ calendar.peopleOut ~ ' ' ~ (calendar.peopleOut == 1 ? 'person' : 'people') }}">
+        <span class="cal-dotbig cal-dotbig--placeholder"></span>
+        <div class="cal-detail-text">
+            <div class="cal-detail-label">Hover a day to see who's out</div>
+            <div class="cal-detail-who">{{ calendar.eventCount }} vacation{{ calendar.eventCount != 1 ? 's' }} this month{{ companyWide ? ' · ' ~ calendar.peopleOut ~ ' ' ~ (calendar.peopleOut == 1 ? 'person' : 'people') }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+(function () {
+    var grid = document.getElementById('calGrid');
+    var detail = document.getElementById('calDetail');
+    if (!grid || !detail) return;
+
+    var dot = detail.querySelector('.cal-dotbig');
+    var label = detail.querySelector('.cal-detail-label');
+    var who = detail.querySelector('.cal-detail-who');
+
+    function placeholder() {
+        dot.className = 'cal-dotbig cal-dotbig--placeholder';
+        label.textContent = detail.dataset.placeholderLabel;
+        who.textContent = detail.dataset.placeholderSub;
+    }
+
+    grid.querySelectorAll('.cal-cell[data-day]').forEach(function (cell) {
+        function enter() {
+            cell.classList.add('is-hovered');
+            if (cell.dataset.kind) {
+                dot.className = 'cal-dotbig cal-dotbig--' + cell.dataset.kind;
+                label.textContent = cell.dataset.label;
+                who.textContent = cell.dataset.who;
+            } else {
+                placeholder();
+            }
+        }
+        function leave() {
+            cell.classList.remove('is-hovered');
+            placeholder();
+        }
+        cell.addEventListener('mouseenter', enter);
+        cell.addEventListener('mouseleave', leave);
+        cell.addEventListener('focus', enter);
+        cell.addEventListener('blur', leave);
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Time – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}My Time{% endblock %}
+{% block topbar_actions %}
+    <a href="{{ path('app_time_entry_log') }}" class="btn btn-secondary btn-sm">Log manually</a>
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+
+{# Active timer banner #}
+{% if activeEntry %}
+<div class="timer-banner">
+    <div>
+        <div class="timer-banner-label">Clocked in since {{ activeEntry.startTime|date('H:i') }}, {{ activeEntry.startTime|date('d M') }}</div>
+    </div>
+    <div class="timer-counter" id="timerCounter">—</div>
+    <form method="post" action="{{ path('app_time_entry_clock_out') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('clock_out') }}">
+        <button type="submit" class="btn btn-danger btn-sm">Clock out</button>
+    </form>
+</div>
+<script>
+(function() {
+    var start = new Date("{{ activeEntry.startTime|date('Y-m-d\\TH:i:s') }}");
+    var el = document.getElementById('timerCounter');
+    function tick() {
+        var diff = Math.floor((Date.now() - start.getTime()) / 1000);
+        var h = Math.floor(diff / 3600);
+        var m = Math.floor((diff % 3600) / 60);
+        var s = diff % 60;
+        el.textContent = (h > 0 ? h + 'h ' : '') + (m > 0 || h > 0 ? String(m).padStart(2,'0') + 'm ' : '') + String(s).padStart(2,'0') + 's';
+    }
+    tick();
+    setInterval(tick, 1000);
+})();
+</script>
+{% else %}
+<div class="clock-panel">
+    <div class="clock-status">
+        <div class="clock-status-label">Not clocked in</div>
+        <div class="clock-status-meta">Start tracking your work time</div>
+    </div>
+    <form method="post" action="{{ path('app_time_entry_clock_in') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('clock_in') }}">
+        <button type="submit" class="btn btn-primary btn-sm">Clock in</button>
+    </form>
+</div>
+{% endif %}
+
+{# Monthly summary #}
+{% include '_partials/monthly_summary_card.html.twig' with {
+    summary: monthlySummary,
+    title: 'now'|date('F Y') ~ ' – Status to Today'
+} %}
+<div style="text-align:right;margin-top:-12px;margin-bottom:20px;">
+    <a href="{{ path('app_time_entry_summary') }}" class="btn btn-secondary btn-sm">Full month history</a>
+</div>
+
+{# Recent entries #}
+<div class="section-header">
+    <span class="section-title">Recent entries</span>
+</div>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Break</th>
+                    <th>Duration</th>
+                    <th>Source</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in recentEntries %}
+                <tr>
+                    <td>{{ entry.startTime|date('d M Y') }}</td>
+                    <td>{{ entry.startTime|date('H:i') }}</td>
+                    <td>{{ entry.endTime ? entry.endTime|date('H:i') : '—' }}</td>
+                    <td class="td-muted">{{ entry.breakMinutes }} min</td>
+                    <td>
+                        {% if entry.durationMinutes is not null %}
+                            {{ (entry.durationMinutes // 60) }}h {{ (entry.durationMinutes % 60) }}m
+                        {% else %}
+                            <span class="text-accent fw-medium">active</span>
+                        {% endif %}
+                    </td>
+                    <td><span class="badge-source">{{ entry.source }}</span></td>
+                    <td>
+                        {% if entry.endTime is not null %}
+                        <form method="post" action="{{ path('app_time_entry_delete', {id: entry.id}) }}"
+                              onsubmit="return confirm('Delete this entry?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ entry.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align:center;color:var(--text-tertiary);padding:24px 12px;">No time entries yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

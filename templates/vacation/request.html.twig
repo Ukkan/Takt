@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Request Vacation – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}
+    <a href="{{ path('app_vacation_index') }}" class="page-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 18 9 12 15 6"/></svg>
+        My Vacations
+    </a>
+    <span style="color:var(--text-tertiary);margin:0 8px;">/</span>
+    Request Vacation
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div style="max-width:440px;">
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            <div class="form-group">
+                {{ form_label(form.startTime, null, {label_attr: {class: 'form-label'}}) }}
+                {{ form_widget(form.startTime, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.startTime) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.endTime, null, {label_attr: {class: 'form-label'}}) }}
+                {{ form_widget(form.endTime, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.endTime) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.note, null, {label_attr: {class: 'form-label'}}) }}
+                {{ form_widget(form.note, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.note) }}
+            </div>
+            {{ form_widget(form.submit, {attr: {class: 'btn btn-primary', style: 'width:100%;height:38px;'}}) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

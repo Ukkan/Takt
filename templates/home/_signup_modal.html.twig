@@ -1,0 +1,75 @@
+<div class="ta-modal" id="taModal" role="dialog" aria-modal="true" aria-label="Create your Takt workspace" hidden>
+    <div class="ta-modal__scrim" data-modal-close></div>
+    <div class="ta-modal__card">
+        <button type="button" class="ta-modal__close" data-modal-close aria-label="Close">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M2 2L12 12M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+        </button>
+
+        <div id="taSignupForm">
+            <div class="ta-modal__head">
+                <div class="ta-modal__eyebrow mono">GET STARTED · FREE FOR &lt; 10 SEATS</div>
+                <h2 class="ta-modal__title">Create your workspace</h2>
+                <p class="ta-modal__sub">Two fields. No credit card. You'll be tracking in under a minute.</p>
+            </div>
+
+            <form class="ta-form" method="post" action="{{ path('app_landing_signup') }}" novalidate>
+                <input type="hidden" name="_token" value="{{ csrf_token('signup') }}">
+                <input type="hidden" name="size" value="11–50" id="taSizeInput">
+
+                <label class="ta-field">
+                    <span class="ta-field__label">Work email</span>
+                    <input type="email" name="email" id="taEmail" class="ta-input" placeholder="you@company.com" autocomplete="email">
+                </label>
+
+                <label class="ta-field">
+                    <span class="ta-field__label">Company</span>
+                    <input type="text" name="company" id="taCompany" class="ta-input" placeholder="Acme, Inc." autocomplete="organization">
+                </label>
+
+                <fieldset class="ta-field">
+                    <span class="ta-field__label">Team size</span>
+                    <div class="ta-segment" role="radiogroup" aria-label="Team size">
+                        <button type="button" class="ta-segment__opt" role="radio" aria-checked="false" data-size="1–10">1–10</button>
+                        <button type="button" class="ta-segment__opt is-active" role="radio" aria-checked="true" data-size="11–50">11–50</button>
+                        <button type="button" class="ta-segment__opt" role="radio" aria-checked="false" data-size="51–250">51–250</button>
+                        <button type="button" class="ta-segment__opt" role="radio" aria-checked="false" data-size="250+">250+</button>
+                    </div>
+                </fieldset>
+
+                <button type="submit" class="ta-btn ta-btn--primary ta-btn--lg" id="taSubmit">
+                    Create workspace
+                    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="margin-left: 8px">
+                        <path d="M2 7H12M8 3L12 7L8 11" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+
+                <p class="ta-form__fine mono">By continuing, you agree to the terms · SOC 2 Type II · GDPR</p>
+            </form>
+        </div>
+
+        <div class="ta-success" id="taSignupSuccess" hidden>
+            <div class="ta-success__mark">
+                <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+                    <circle cx="14" cy="14" r="13" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-opacity=".35"/>
+                    <path d="M8 14.5L12.5 19L20 10" stroke="var(--accent)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="ta-modal__title">You're in.</h2>
+            <p class="ta-modal__sub">
+                We sent a magic link to <strong id="taSuccessEmail"></strong>. Open it on any device to finish setup
+                and invite the rest of <span id="taSuccessCompany">your team</span>.
+            </p>
+            <div class="ta-success__row">
+                <button type="button" class="ta-btn ta-btn--primary" data-modal-close>Got it</button>
+                <button type="button" class="ta-btn ta-btn--ghost" id="taSuccessBack">Use a different email</button>
+            </div>
+            <div class="ta-success__steps mono">
+                <div class="ta-success__step"><span>1</span> Verify your inbox</div>
+                <div class="ta-success__step"><span>2</span> Add your team</div>
+                <div class="ta-success__step"><span>3</span> Start the clock</div>
+            </div>
+        </div>
+    </div>
+</div>

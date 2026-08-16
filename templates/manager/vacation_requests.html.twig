@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vacation Requests – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}Vacation Requests{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Duration</th>
+                    <th>Note</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                {% set emp = req.employee %}
+                <tr>
+                    <td style="font-weight:500;">{{ emp.user ? emp.user.fullName ?? emp.user.email : 'Employee #' ~ emp.id }}</td>
+                    <td>{{ req.startTime|date('d M Y') }}</td>
+                    <td>{{ req.endTime ? req.endTime|date('d M Y') : '—' }}</td>
+                    <td class="td-muted">
+                        {% if req.endTime %}
+                            {% set days = ((req.endTime.timestamp - req.startTime.timestamp) / 86400)|round(0, 'ceil') + 1 %}
+                            {{ days }} day{{ days != 1 ? 's' }}
+                        {% else %}—{% endif %}
+                    </td>
+                    <td class="td-muted">{{ req.note ?? '—' }}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <form method="post" action="{{ path('app_manager_vacation_approve', {id: req.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('vacation_approve_' ~ req.id) }}">
+                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                            </form>
+                            <form method="post" action="{{ path('app_manager_vacation_reject', {id: req.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('vacation_reject_' ~ req.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align:center;color:var(--text-tertiary);padding:24px 12px;">No pending vacation requests.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

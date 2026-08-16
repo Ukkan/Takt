@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ employee.user ? employee.user.fullName ?? employee.user.email : 'Employee' }} – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}
+    <a href="{{ path('app_manager_dashboard') }}" class="page-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 18 9 12 15 6"/></svg>
+        Team
+    </a>
+    <span style="color:var(--text-tertiary);margin:0 8px;">/</span>
+    {{ employee.user ? employee.user.fullName ?? employee.user.email : 'Employee #' ~ employee.id }}
+    {% if employee.position %}<span style="color:var(--text-tertiary);font-weight:400;font-size:13px;margin-left:6px;">{{ employee.position }}</span>{% endif %}
+{% endblock %}
+{% block topbar_actions %}
+    <a href="{{ path('app_manager_time_add', {id: employee.id}) }}" class="btn btn-primary btn-sm">Add entry</a>
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+
+{% if activeEntry %}
+<div class="flash flash-success" style="margin-bottom:20px;">
+    Currently clocked in since <strong>{{ activeEntry.startTime|date('H:i, d M Y') }}</strong>.
+</div>
+{% endif %}
+
+{# Month selector #}
+<div class="month-selector">
+    <form method="get" class="d-flex gap-3 align-items-end flex-wrap" style="width:100%;">
+        <input type="hidden" name="year"  id="empHiddenYear"  value="{{ selectedYear }}">
+        <input type="hidden" name="month" id="empHiddenMonth" value="{{ selectedMonth }}">
+        <div>
+            <label class="form-label" style="font-size:11px;color:var(--text-tertiary);margin-bottom:4px;">Month</label>
+            <select class="form-select form-select-sm" style="min-width:160px;"
+                    onchange="var p=this.value.split('-'); document.getElementById('empHiddenYear').value=p[0]; document.getElementById('empHiddenMonth').value=p[1];">
+                {% for m in availableMonths %}
+                    <option value="{{ m.year }}-{{ m.month }}"
+                        {{ m.year == selectedYear and m.month == selectedMonth ? 'selected' }}>
+                        {{ m.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">View</button>
+    </form>
+</div>
+
+{% include '_partials/monthly_summary_card.html.twig' with {
+    summary: monthlySummary,
+    title: monthlySummary.periodStart|date('F Y') ~ ' Summary'
+} %}
+
+<div class="section-header">
+    <span class="section-title">Time entries</span>
+</div>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Break</th>
+                    <th>Duration</th>
+                    <th>Source</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.startTime|date('d M Y') }}</td>
+                    <td>{{ entry.startTime|date('H:i') }}</td>
+                    <td>{{ entry.endTime ? entry.endTime|date('H:i') : '—' }}</td>
+                    <td class="td-muted">{{ entry.breakMinutes }} min</td>
+                    <td>
+                        {% if entry.durationMinutes is not null %}
+                            {{ (entry.durationMinutes // 60) }}h {{ (entry.durationMinutes % 60) }}m
+                        {% else %}
+                            <span class="text-accent fw-medium">active</span>
+                        {% endif %}
+                    </td>
+                    <td><span class="badge-source">{{ entry.source }}</span></td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ path('app_manager_time_edit', {id: entry.id}) }}" class="btn btn-secondary btn-sm">Edit</a>
+                            <form method="post" action="{{ path('app_manager_time_delete', {id: entry.id}) }}"
+                                  onsubmit="return confirm('Delete this entry?')">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_' ~ entry.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align:center;color:var(--text-tertiary);padding:24px 12px;">No time entries.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}No Employee Record – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}Setup Required{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div style="max-width:480px;">
+    <div class="flash flash-warning">
+        <div>
+            <div style="font-weight:500;margin-bottom:4px;">No employee record found</div>
+            <div>Your account is not yet linked to an employee record. Please contact your manager to set this up.</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

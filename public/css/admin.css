@@ -1,0 +1,267 @@
+/* ── WorkManager – Material-inspired Sonata Admin overrides ── */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* ── Base typography ── */
+body,
+.skin-blue .wrapper,
+.content-wrapper {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    background-color: #f5f5f5;
+}
+
+/* ── Navbar ── */
+.skin-blue .main-header .navbar,
+.skin-blue .main-header .logo {
+    background-color: #1976d2;
+    border-bottom: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,.24);
+}
+
+.skin-blue .main-header .logo {
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: .5px;
+    color: #fff !important;
+}
+
+.skin-blue .main-header .navbar .nav > li > a {
+    color: rgba(255,255,255,.85);
+}
+
+.skin-blue .main-header .navbar .nav > li > a:hover {
+    background-color: rgba(255,255,255,.15);
+    color: #fff;
+}
+
+/* ── Sidebar ── */
+.skin-blue .main-sidebar,
+.skin-blue .left-side {
+    background-color: #263238;
+}
+
+.skin-blue .sidebar-menu > li > a {
+    color: rgba(255,255,255,.7);
+    border-left: 3px solid transparent;
+    transition: background .2s, border-color .2s;
+}
+
+.skin-blue .sidebar-menu > li:hover > a,
+.skin-blue .sidebar-menu > li.active > a {
+    background-color: rgba(255,255,255,.08);
+    border-left-color: #42a5f5;
+    color: #fff;
+}
+
+.skin-blue .sidebar-menu > li.active > a {
+    color: #fff;
+}
+
+.skin-blue .treeview-menu > li > a {
+    color: rgba(255,255,255,.6);
+    padding-left: 28px;
+}
+
+.skin-blue .treeview-menu > li > a:hover,
+.skin-blue .treeview-menu > li.active > a {
+    color: #fff;
+    background: transparent;
+}
+
+/* ── Content area ── */
+.content-wrapper {
+    background-color: #f5f5f5;
+}
+
+.content-header > h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #212121;
+}
+
+/* ── Cards / Boxes ── */
+.box {
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.14);
+    transition: box-shadow .2s;
+}
+
+.box:hover {
+    box-shadow: 0 3px 6px rgba(0,0,0,.16), 0 3px 6px rgba(0,0,0,.13);
+}
+
+.box-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 14px 16px;
+}
+
+.box-header .box-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: #212121;
+}
+
+.box.box-primary {
+    border-top: 3px solid #1976d2;
+}
+
+.box.box-success {
+    border-top: 3px solid #43a047;
+}
+
+.box.box-danger {
+    border-top: 3px solid #e53935;
+}
+
+/* ── Buttons ── */
+.btn {
+    border-radius: 2px;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    border: none;
+    box-shadow: 0 2px 2px rgba(0,0,0,.14);
+    transition: box-shadow .2s, background-color .2s;
+}
+
+.btn:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,.2);
+}
+
+.btn-primary {
+    background-color: #1976d2;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #1565c0;
+}
+
+.btn-success {
+    background-color: #43a047;
+}
+
+.btn-success:hover {
+    background-color: #388e3c;
+}
+
+.btn-danger {
+    background-color: #e53935;
+}
+
+.btn-danger:hover {
+    background-color: #c62828;
+}
+
+.btn-warning {
+    background-color: #fb8c00;
+}
+
+.btn-default {
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    color: #424242;
+}
+
+/* ── Tables ── */
+.table > thead > tr > th {
+    background-color: #fafafa;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: #757575;
+    border-bottom: 2px solid #e0e0e0;
+    padding: 12px 16px;
+}
+
+.table > tbody > tr > td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0;
+    color: #424242;
+}
+
+.table-hover > tbody > tr:hover > td {
+    background-color: #e3f2fd;
+}
+
+/* ── Form inputs ── */
+.form-control {
+    border: none;
+    border-bottom: 1px solid #bdbdbd;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 6px 0;
+    transition: border-color .2s;
+    background-color: transparent;
+}
+
+.form-control:focus {
+    border-bottom: 2px solid #1976d2;
+    box-shadow: none;
+    outline: none;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+    background-color: transparent;
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+/* ── Pagination ── */
+.pagination > li > a,
+.pagination > li > span {
+    border-radius: 50% !important;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+    text-align: center;
+    margin: 0 2px;
+    border: none;
+    color: #1976d2;
+}
+
+.pagination > .active > a,
+.pagination > .active > span {
+    background-color: #1976d2;
+    color: #fff;
+}
+
+/* ── Alerts / Flash messages ── */
+.alert {
+    border: none;
+    border-radius: 4px;
+    border-left: 4px solid;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12);
+}
+
+.alert-success { border-left-color: #43a047; background-color: #e8f5e9; color: #2e7d32; }
+.alert-danger   { border-left-color: #e53935; background-color: #ffebee; color: #b71c1c; }
+.alert-warning  { border-left-color: #fb8c00; background-color: #fff3e0; color: #e65100; }
+.alert-info     { border-left-color: #1976d2; background-color: #e3f2fd; color: #0d47a1; }
+
+/* ── Labels / Badges ── */
+.label, .badge {
+    border-radius: 2px;
+    font-weight: 500;
+    letter-spacing: .3px;
+}
+
+.label-primary, .badge-primary { background-color: #1976d2; }
+.label-success, .badge-success { background-color: #43a047; }
+.label-danger,  .badge-danger  { background-color: #e53935; }

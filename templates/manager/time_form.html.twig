@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }} – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}
+    <a href="{{ path('app_manager_employee_time', {id: employee.id}) }}" class="page-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 18 9 12 15 6"/></svg>
+        {{ employee.user ? employee.user.fullName ?? employee.user.email : 'Employee' }}
+    </a>
+    <span style="color:var(--text-tertiary);margin:0 8px;">/</span>
+    {{ title }}
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div style="max-width:440px;">
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">
+        Employee: <strong style="color:var(--text-primary);">{{ employee.user ? employee.user.fullName ?? employee.user.email : 'Employee #' ~ employee.id }}</strong>
+    </p>
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            <div class="form-group">
+                {{ form_label(form.startTime) }}
+                {{ form_widget(form.startTime, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.startTime) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.endTime) }}
+                {{ form_widget(form.endTime, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.endTime) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.breakMinutes) }}
+                {{ form_widget(form.breakMinutes, {attr: {class: 'form-control'}}) }}
+                {{ form_errors(form.breakMinutes) }}
+            </div>
+            {{ form_widget(form.save, {attr: {class: 'btn btn-primary', style: 'width:100%;height:38px;'}}) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

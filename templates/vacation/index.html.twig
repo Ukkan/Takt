@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Vacations – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}My Vacations{% endblock %}
+{% block topbar_actions %}
+    <a href="{{ path('app_vacation_request') }}" class="btn btn-primary btn-sm">Request vacation</a>
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Duration</th>
+                    <th>Note</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vacation in vacations %}
+                <tr>
+                    <td>{{ vacation.startTime|date('d M Y') }}</td>
+                    <td>{{ vacation.endTime ? vacation.endTime|date('d M Y') : '—' }}</td>
+                    <td class="td-muted">
+                        {% if vacation.endTime %}
+                            {% set days = ((vacation.endTime.timestamp - vacation.startTime.timestamp) / 86400)|round(0, 'ceil') + 1 %}
+                            {{ days }} day{{ days != 1 ? 's' }}
+                        {% else %}—{% endif %}
+                    </td>
+                    <td class="td-muted">{{ vacation.note ?? '—' }}</td>
+                    <td>
+                        {% if vacation.status == 'approved' %}
+                            <span class="status-approved">Approved</span>
+                        {% elseif vacation.status == 'rejected' %}
+                            <span class="status-rejected">Rejected</span>
+                        {% else %}
+                            <span class="status-pending">Pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align:center;color:var(--text-tertiary);padding:24px 12px;">No vacation requests yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

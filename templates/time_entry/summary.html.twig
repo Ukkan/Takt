@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Monthly Summary – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}
+    <a href="{{ path('app_time_entry_index') }}" class="page-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 18 9 12 15 6"/></svg>
+        My Time
+    </a>
+    <span style="color:var(--text-tertiary);margin:0 8px;">/</span>
+    Monthly Summary
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+<div class="month-selector">
+    <form method="get" class="d-flex gap-3 align-items-end flex-wrap" style="width:100%;">
+        <input type="hidden" name="year"  id="hiddenYear"  value="{{ selectedYear }}">
+        <input type="hidden" name="month" id="hiddenMonth" value="{{ selectedMonth }}">
+        <div>
+            <label class="form-label" style="font-size:11px;color:var(--text-tertiary);margin-bottom:4px;">Month</label>
+            <select class="form-select form-select-sm" style="min-width:160px;"
+                    onchange="var p=this.value.split('-'); document.getElementById('hiddenYear').value=p[0]; document.getElementById('hiddenMonth').value=p[1];">
+                {% for m in availableMonths %}
+                    <option value="{{ m.year }}-{{ m.month }}"
+                        {{ m.year == selectedYear and m.month == selectedMonth ? 'selected' }}>
+                        {{ m.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">View</button>
+    </form>
+</div>
+
+{% include '_partials/monthly_summary_card.html.twig' with {
+    summary: monthlySummary,
+    title: monthlySummary.periodStart|date('F Y') ~ ' Summary'
+} %}
+{% endblock %}

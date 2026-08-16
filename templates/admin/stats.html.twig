@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}System Overview – Takt{% endblock %}
+
+{% block topbar %}
+{% embed 'partials/_topbar.html.twig' %}
+{% block topbar_title %}System Overview{% endblock %}
+{% block topbar_actions %}
+    <a href="{{ path('sonata_admin_dashboard') }}" class="btn btn-secondary btn-sm">Admin panel</a>
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block body %}
+{% if scopedToCompany %}
+    <p style="color:var(--text-secondary);margin-bottom:16px;">Scoped to {{ scopedToCompany.name }}.</p>
+{% else %}
+    <p style="color:var(--text-secondary);margin-bottom:16px;">Platform-wide view (all companies).</p>
+{% endif %}
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-label">Companies</div>
+        <div class="stat-value accent">{{ totalCompanies }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Users</div>
+        <div class="stat-value">{{ totalUsers }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Employees</div>
+        <div class="stat-value">{{ totalEmployees }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Clocked in now</div>
+        <div class="stat-value success">{{ clockedInNow }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body" style="text-align:center;color:var(--text-secondary);">
+        <span style="font-size:22px;font-weight:500;color:var(--text-primary);">{{ entriestoday }}</span>
+        <span style="margin-left:8px;font-size:13px;">time entries started today</span>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+<div class="ta-cal" role="group" aria-label="{{ calendar.month }} {{ calendar.year }}" id="taCal">
+    <div class="ta-cal__head">
+        <div class="ta-cal__title">
+            <span class="ta-cal__month">{{ calendar.month }}</span>
+            <span class="mono ta-cal__year">{{ calendar.year }}</span>
+        </div>
+        <div class="ta-cal__legend">
+            <span class="ta-cal__legitem"><i class="ta-swatch ta-swatch--public"></i> Public</span>
+            <span class="ta-cal__legitem"><i class="ta-swatch ta-swatch--pto"></i> PTO</span>
+        </div>
+    </div>
+
+    <div class="ta-cal__dow mono">
+        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+    </div>
+
+    {% set lead = calendar.firstDow %}
+    {% set pad = (7 - (lead + calendar.daysInMonth) % 7) % 7 %}
+    <div class="ta-cal__grid">
+        {% if lead > 0 %}
+            {% for i in 1..lead %}
+                <span class="ta-cal__cell ta-cal__cell--empty"></span>
+            {% endfor %}
+        {% endif %}
+        {% for d in 1..calendar.daysInMonth %}
+            {% set e = calendar.events[d] ?? null %}
+            <button type="button"
+                    class="ta-cal__cell{{ e ? ' ta-cal__cell--' ~ e.kind }}{{ d == calendar.today ? ' ta-cal__cell--today' }}"
+                    data-day="{{ d }}"
+                    {% if e %}data-kind="{{ e.kind }}" data-label="{{ e.label }}" data-who="{{ e.who }}"{% endif %}
+                    aria-label="{{ calendar.month }} {{ d }}{{ e ? ', ' ~ e.who }}">
+                <span class="mono">{{ d }}</span>
+            </button>
+        {% endfor %}
+        {% if pad > 0 %}
+            {% for i in 1..pad %}
+                <span class="ta-cal__cell ta-cal__cell--empty"></span>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="ta-cal__detail" aria-live="polite" id="taCalDetail"
+         data-placeholder-sub="{{ calendar.eventCount }} events this month · {{ calendar.peopleOut }} people">
+        <span class="ta-cal__dotbig ta-cal__dotbig--placeholder"></span>
+        <div class="ta-cal__detail-text">
+            <div class="ta-cal__detail-label">Hover a day to see who's out</div>
+            <div class="ta-cal__detail-who mono">{{ calendar.eventCount }} events this month · {{ calendar.peopleOut }} people</div>
+        </div>
+    </div>
+</div>

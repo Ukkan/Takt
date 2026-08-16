@@ -1,0 +1,35 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+        <i class="fas fa-user-circle me-1"></i>
+        {{ app.user.userIdentifier }}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end">
+        {% if is_granted('ROLE_ADMIN') %}
+            <li>
+                <a class="dropdown-item" href="{{ path('app_admin_stats') }}">
+                    <i class="fas fa-chart-bar me-2"></i>Stats Dashboard
+                </a>
+            </li>
+        {% endif %}
+        {% if is_granted('ROLE_MANAGER') %}
+            <li>
+                <a class="dropdown-item" href="{{ path('app_manager_dashboard') }}">
+                    <i class="fas fa-users me-2"></i>Manager Dashboard
+                </a>
+            </li>
+        {% endif %}
+        {% if is_granted('ROLE_EMPLOYEE') %}
+            <li>
+                <a class="dropdown-item" href="{{ path('app_time_entry_index') }}">
+                    <i class="fas fa-clock me-2"></i>Time Tracking
+                </a>
+            </li>
+        {% endif %}
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </li>
+    </ul>
+</li>
